@@ -26,7 +26,15 @@ const options = {
 
 const client = redis.createClient(options)
 const setValue = (key, value) => {
-  client.set(key, value)
+  const arr = [null, 'null', undefined, 'undefined']
+  if (arr.includes(value)) return
+  if (typeof value === 'string') {
+    client.set(key, value)
+  } else if (typeof value === 'object') {
+    Object.keys(value).forEach((item) => {
+      client.hset(key, item, value[item], redis.print)
+    })
+  }
 }
 
 const { promisify } = require("util");
@@ -36,8 +44,14 @@ const getValue = (key) => {
   return getAsync(key)
 }
 
+// 获取整个hash表里的数据
+const getHValue = (key) => {
+  return promisify(client.hgetall).bind(client)(key)
+}
+
 export {
+  client,
   setValue,
   getValue,
-  client
+  getHValue
 }
