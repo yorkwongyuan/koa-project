@@ -1,8 +1,8 @@
 import redis from 'redis'
+import bluebird from 'bluebird'
+import config from './index'
 const options = {
-  host: '106.55.51.93',
-  port: '15001',
-  password: 123456,
+  ...config.REDIS,
   detect_buffers: true,
   retry_strategy: function(options) {
     if (options.error && options.error.code === "ECONNREFUSED") {
@@ -24,6 +24,7 @@ const options = {
   }
 }
 
+bluebird.promisifyAll(redis)
 const client = redis.createClient(options)
 const setValue = (key, value) => {
   const arr = [null, 'null', undefined, 'undefined']
@@ -37,21 +38,36 @@ const setValue = (key, value) => {
   }
 }
 
-const { promisify } = require("util");
-const getAsync = promisify(client.get).bind(client);
+// const { promisify } = require("util");
+// const getAsync = promisify(client.get).bind(client);
 
+// 获取字符串
 const getValue = (key) => {
-  return getAsync(key)
+  // return getAsync(key)
+  return client.getAsync(key)
 }
 
 // 获取整个hash表里的数据
 const getHValue = (key) => {
-  return promisify(client.hgetall).bind(client)(key)
+  // return promisify(client.hgetall).bind(client)(key)
+  return client.hgetallAsync(key)
+}
+
+// 删除
+const delValue = (key) => {
+  client.del(key, (err, res) => {
+    if (res === 1) {
+      console.log('success')
+    } else {
+      console.log('fail', err)
+    }
+  })
 }
 
 export {
   client,
   setValue,
   getValue,
-  getHValue
+  getHValue,
+  delValue
 }
