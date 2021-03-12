@@ -1,10 +1,11 @@
 import send from '../config/mailConfig'
 import monment from 'moment'
+import jsonwebtoken from 'jsonwebtoken'
+import config from '../config/index'
 class LoginController {
   constructor() {}
   async forget (ctx) {
     const { body } = ctx.request
-    console.log(body, 'ctx')
     try {
       const result = await send({
         code: '1234',
@@ -20,6 +21,19 @@ class LoginController {
       }
     } catch (e) {
       console.log(e)
+    }
+  }
+  login (ctx) {
+    // 放在payload中
+    // const token = jsonwebtoken.sign({_id: 'york', exp: Math.floor(Date.now()/1000) + 24*60*60}, config.JWT_SECRET)
+    // 放在options中
+    const token = jsonwebtoken.sign({_id: 'york'}, config.JWT_SECRET, {
+      expiresIn: '1h'
+    })
+    ctx.body = {
+      code: 200,
+      data: token,
+      msg: '邮件发送成功'
     }
   }
 }

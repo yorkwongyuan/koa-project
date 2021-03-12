@@ -4,7 +4,10 @@ const REDIS = {
   port: '15001',
   password: 123456,
 }
+
+const JWT_SECRET = '12312123123'
 export default {
   DB_URL,
-  REDIS
+  REDIS,
+  JWT_SECRET
 }
