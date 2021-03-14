@@ -44,6 +44,7 @@ const setValue = (key, value) => {
 // 获取字符串
 const getValue = (key) => {
   // return getAsync(key)
+  console.log(222)
   return client.getAsync(key)
 }
 

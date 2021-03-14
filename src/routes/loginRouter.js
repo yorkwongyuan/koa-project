@@ -5,5 +5,5 @@ const router = new Router()
 
 router.prefix('/login')
 router.post('/loginController', LoginController.forget)
-router.get('/login', LoginController.login)
+router.post('/login', LoginController.login)
 export default router

@@ -2,6 +2,8 @@ import send from '../config/mailConfig'
 import monment from 'moment'
 import jsonwebtoken from 'jsonwebtoken'
 import config from '../config/index'
+import { checkCode } from '../common/Util'
+import User from '../model/User'
 class LoginController {
   constructor() {}
   async forget (ctx) {
@@ -23,17 +25,39 @@ class LoginController {
       console.log(e)
     }
   }
-  login (ctx) {
-    // 放在payload中
-    // const token = jsonwebtoken.sign({_id: 'york', exp: Math.floor(Date.now()/1000) + 24*60*60}, config.JWT_SECRET)
-    // 放在options中
-    const token = jsonwebtoken.sign({_id: 'york'}, config.JWT_SECRET, {
-      expiresIn: '1h'
-    })
-    ctx.body = {
-      code: 200,
-      data: token,
-      msg: '邮件发送成功'
+  async login (ctx) {
+    const { body } = ctx.request
+    const sid = body.sid
+    const code = body.code
+    console.log(body, 'body')
+    const userInfo = await User.findOne({username: body.username})
+    console.log('userInfo', userInfo)
+    let password = userInfo.password
+    // 验证码是否正确
+    if (checkCode(sid, code)) {
+      let bool = password === body.password
+      console.log(bool, 'bool')
+      // 用户名密码正确
+      if (bool) {
+        const token = jsonwebtoken.sign({_id: '1111ork'}, config.JWT_SECRET, {
+          expiresIn: '1h'
+        })
+        ctx.body = {
+          code: 200,
+          data: token,
+          msg: '登录成功'
+        }
+      } else {
+        ctx.body = {
+          code: 404,
+          msg: '账号密码不正确'
+        }
+      }
+    } else {
+      ctx.body = {
+        msg: '图片验证码不正确,请检查',
+        code: 401
+      }
     }
   }
 }

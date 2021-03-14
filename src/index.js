@@ -13,7 +13,7 @@ import config from './config/index'
 import ErrorHandler from './common/ErrorHandler'
 const app = new Koa()
 
-const jwt = JWT({secret: config.JWT_SECRET}).unless({path: [/^\/public/]})
+const jwt = JWT({secret: config.JWT_SECRET}).unless({path: [/^\/public/, /\/login/]})
 const middleWare = compose([
   body(),
   json({pretty: true, param: 'pretty'}),
