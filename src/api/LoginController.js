@@ -29,14 +29,12 @@ class LoginController {
     const { body } = ctx.request
     const sid = body.sid
     const code = body.code
-    console.log(body, 'body')
     const userInfo = await User.findOne({username: body.username})
-    console.log('userInfo', userInfo)
     let password = userInfo.password
+    const isCodeAvailable = await checkCode(sid, code)
     // 验证码是否正确
-    if (checkCode(sid, code)) {
+    if (isCodeAvailable) {
       let bool = password === body.password
-      console.log(bool, 'bool')
       // 用户名密码正确
       if (bool) {
         const token = jsonwebtoken.sign({_id: '1111ork'}, config.JWT_SECRET, {

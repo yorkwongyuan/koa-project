@@ -2,9 +2,8 @@ import { getValue } from '../config/RedisConfig'
 
 // 判断验证码
 const checkCode = async (key, value) => {
-  console.log(111)
   let redisData = await getValue(key)
-  console.log(333, redisData)
+  console.log(redisData.toLowerCase() === value.toLowerCase(), 'bool')
   // redis 中有这个数据
   if (redisData !== null) {
     // 值相同
