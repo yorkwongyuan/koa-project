@@ -13,6 +13,11 @@ const webpackConfig = {
     filename: '[name].js',
     path: DIST_PATH
   },
+  resolve: {
+    alias: {
+      '@': SRC_PATH
+    }
+  },
   module: {
     rules: [{
       test: /\.js|jsx$/,

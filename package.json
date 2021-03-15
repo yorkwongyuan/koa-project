@@ -8,11 +8,10 @@
     "start:es": "npx nodemon --exec babel-node ./src/index",
     "webpack:debug": "npx node --inspect-brk ./node_modules/.bin/webpack --progress",
     "build": "cross-env NODE_ENV=production webpack --config build/webpack.config.prod.js",
-    "dev": "cross-env NODE_ENV=development nodemon --exec babel-node --inspect=9090 ./src/index.js",
     "clean": "rimraf dist",
     "debug": "nodemon --inspect ./dist/server.js",
     "watch": "cross-env NODE_ENV=dev webpack --watch --progress --config build/webpack.config.dev.js",
-    "start:dist":"npm-run-all -p watch debug"
+    "dev":"npm-run-all -p watch debug"
   },
   "keywords": [],
   "author": "wy <631824375@qq.com>",

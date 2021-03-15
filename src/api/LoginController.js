@@ -1,4 +1,4 @@
-import send from '../config/mailConfig'
+import send from '@/config/mailConfig'
 import monment from 'moment'
 import jsonwebtoken from 'jsonwebtoken'
 import config from '../config/index'
@@ -27,11 +27,13 @@ class LoginController {
   }
   async login (ctx) {
     const { body } = ctx.request
-    const sid = body.sid
+    const sid = body.uuid
     const code = body.code
     const userInfo = await User.findOne({username: body.username})
     let password = userInfo.password
+    console.log(userInfo, 'userInfo')
     const isCodeAvailable = await checkCode(sid, code)
+    console.log(isCodeAvailable, 'isCodeAvailable')
     // 验证码是否正确
     if (isCodeAvailable) {
       let bool = password === body.password

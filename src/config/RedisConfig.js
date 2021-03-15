@@ -26,7 +26,7 @@ const options = {
 
 bluebird.promisifyAll(redis)
 const client = redis.createClient(options)
-const setValue = (key, value) => {
+const setValue = (key, value, time) => {
   const arr = [null, 'null', undefined, 'undefined']
   if (arr.includes(value)) return
   if (typeof value === 'string') {
@@ -36,6 +36,7 @@ const setValue = (key, value) => {
       client.hset(key, item, value[item], redis.print)
     })
   }
+  client.expire(key, time)
 }
 
 // const { promisify } = require("util");
