@@ -1,6 +1,6 @@
 export default (ctx, next) => {
-  console.log('1')
   return next().catch((err) => {
+    console.log('1')
     if (401 == err.status) {
       ctx.status = 401;
       ctx.body = {
