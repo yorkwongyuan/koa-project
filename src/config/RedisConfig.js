@@ -30,13 +30,18 @@ const setValue = (key, value, time) => {
   const arr = [null, 'null', undefined, 'undefined']
   if (arr.includes(value)) return
   if (typeof value === 'string') {
-    client.set(key, value)
+    if (typeof time !== 'undefined') {
+      client.set(key, value, 'EX', time)
+    } else {
+      client.set(key, value)
+    }
   } else if (typeof value === 'object') {
     Object.keys(value).forEach((item) => {
       client.hset(key, item, value[item], redis.print)
     })
   }
-  client.expire(key, time)
+  // 也可以使用此方法
+  // client.expire(key, time)
 }
 
 // const { promisify } = require("util");

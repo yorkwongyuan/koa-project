@@ -2,7 +2,7 @@ const webpack = require('webpack')
 const path = require('path')
 const nodeExternals = require('webpack-node-externals')
 const { CleanWebpackPlugin } = require('clean-webpack-plugin')
-const {SRC_PATH, DIST_PATH} = require('./utils')
+const {SRC_PATH, DIST_PATH, getWebpackResolveConfig} = require('./utils')
 
 const webpackConfig = {
   target: "node",
@@ -14,9 +14,7 @@ const webpackConfig = {
     path: DIST_PATH
   },
   resolve: {
-    alias: {
-      '@': SRC_PATH
-    }
+    ...getWebpackResolveConfig()
   },
   module: {
     rules: [{

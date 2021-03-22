@@ -5,6 +5,8 @@ class PublicController {
 
   }
   getCaptcha (ctx) {
+    const body = ctx.request.query
+    console.log(body, 'body')
     const newCaptcha = svgCaptcha.create({
       size: 4, // 验证码位数
       ignoreChars: 'io0l', // 不显示的几个字母或者数字
@@ -13,12 +15,11 @@ class PublicController {
       width: 150, // 宽度
       height: 50  // 高度
     })
-    const uuid = Math.random()
-    setValue(uuid, newCaptcha.text, 35 )
+    const sid = body.sid
+    setValue(sid, newCaptcha.text, 35 )
     ctx.body = {
       "code": 200,
-      "message": newCaptcha.data,
-      "uuid": uuid
+      "message": newCaptcha.data
     }
   }
 }

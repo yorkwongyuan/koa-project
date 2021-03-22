@@ -27,7 +27,7 @@ class LoginController {
   }
   async login (ctx) {
     const { body } = ctx.request
-    const sid = body.uuid
+    const sid = body.sid
     const code = body.code
     const userInfo = await User.findOne({username: body.username})
     let password = userInfo.password
