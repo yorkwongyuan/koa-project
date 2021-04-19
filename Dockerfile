@@ -11,3 +11,4 @@ RUN npm run build
 EXPOSE 12005
 VOLUME ["/app/public"]
 CMD ["node", "dist/server.bundle.js"]
+
