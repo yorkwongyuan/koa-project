@@ -2,7 +2,7 @@
 FROM node:10
 LABEL maintainer=631824375@qq.com
 
-# 创建一个工作目录
+# 创建一个工作目录了
 WORKDIR /app
 COPY . .
 RUN yarn install --registry=https://registry.npm.taobao.org
