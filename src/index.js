@@ -30,5 +30,7 @@ if (!isDevMode) {
 }
 app.use(middleWare)
 app.use(routers())
-
-app.listen(3000)
+let port = isDevMode ? 3000 : 12005
+app.listen(port, () => {
+  console.log(`The server is runing at:${port}`)
+})

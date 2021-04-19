@@ -26,6 +26,7 @@ const options = {
 
 bluebird.promisifyAll(redis)
 const client = redis.createClient(options)
+// 设置
 const setValue = (key, value, time) => {
   const arr = [null, 'null', undefined, 'undefined']
   if (arr.includes(value)) return
