@@ -1,4 +1,4 @@
-import send from '@/config/mailConfig'
+import send from '../config/mailConfig'
 import monment from 'moment'
 import jsonwebtoken from 'jsonwebtoken'
 import config from '../config/index'
