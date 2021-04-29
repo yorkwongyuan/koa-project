@@ -6,7 +6,7 @@ import { checkCode } from '../common/Util'
 import User from '../model/User'
 import bcrypt from 'bcrypt'
 class LoginController {
-  constructor() {}
+  // constructor () {}
   async forget (ctx) {
     const { body } = ctx.request
     try {
@@ -26,21 +26,22 @@ class LoginController {
       console.log(e)
     }
   }
+
   async login (ctx) {
     const { body } = ctx.request
     const sid = body.sid
     const code = body.code
-    const userInfo = await User.findOne({username: body.username})
-    let password = userInfo.password
+    const userInfo = await User.findOne({ username: body.username })
+    const password = userInfo.password
     console.log(userInfo, 'userInfo')
     const isCodeAvailable = await checkCode(sid, code)
     console.log(isCodeAvailable, 'isCodeAvailable')
     // 验证码是否正确
     if (isCodeAvailable) {
-      let bool = bcrypt.compare(body.password, password)
+      const bool = bcrypt.compare(body.password, password)
       // 用户名密码正确
       if (bool) {
-        const token = jsonwebtoken.sign({_id: '1111ork'}, config.JWT_SECRET, {
+        const token = jsonwebtoken.sign({ _id: '1111ork' }, config.JWT_SECRET, {
           expiresIn: '1h'
         })
         ctx.body = {
@@ -61,25 +62,26 @@ class LoginController {
       }
     }
   }
+
   async register (ctx) {
     console.log(ctx, 'bod11y')
     // 接收数据
     const { body } = ctx.request
     const sid = body.sid
     const code = body.code
-    let msg = {}
+    const msg = {}
     const isCodeAvailable = await checkCode(sid, code)
     let isChecked = true
     // 校验验证码
-    if(isCodeAvailable) {
+    if (isCodeAvailable) {
       // 校验用户名是否重复
-      const user1 = await User.findOne({username: body.username})
+      const user1 = await User.findOne({ username: body.username })
       if (user1 && typeof user1.username !== 'undefined') {
         msg.username = ['邮箱已经被注册']
         isChecked = false
       }
       // 校验昵称是否重复
-      const user2 = await User.findOne({username: body.nickname})
+      const user2 = await User.findOne({ username: body.nickname })
       if (user2 && typeof user2.nickname !== 'undefined') {
         msg.nickname = ['昵称已经被注册了']
         isChecked = false
@@ -87,13 +89,13 @@ class LoginController {
       // 写入数据库
       if (isChecked) {
         body.password = await bcrypt.hash(body.password, 5)
-        let user = new User({
+        const user = new User({
           username: body.username,
           password: body.password,
           nickname: body.nickname,
           created: monment().format('YY-MM-DD HH:mm:ss')
         })
-        let result = await user.save()
+        const result = await user.save()
         ctx.body = {
           code: 200,
           data: result,

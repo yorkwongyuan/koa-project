@@ -6,7 +6,7 @@ const EVENTS = {
   ERROR: 'error',
   DISCONNECTED: 'disconnected'
 }
-mongoose.connect(config.DB_URL, {useNewUrlParser: true, useUnifiedTopology: true})
+mongoose.connect(config.DB_URL, { useNewUrlParser: true, useUnifiedTopology: true })
 
 // 连接成功
 mongoose.connection.on(EVENTS.CONNECTED, () => {

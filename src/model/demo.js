@@ -30,7 +30,7 @@ import Users from './test.js'
 
 // 查
 const findMethods = async () => {
-  let result = await Users.find()
+  const result = await Users.find()
   console.log(result)
 }
 
