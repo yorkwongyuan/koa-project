@@ -1,13 +1,13 @@
 import nodemailer from "nodemailer"
 
 
-const sendInfo = {
-  code: '1234',
-  expire: '2019-1-1',
-  // email: '282311878@qq.com',
-  email: '631824375@qq.com',
-  user: 'wangy'
-}
+// const sendInfo = {
+//   code: '1234',
+//   expire: '2019-1-1',
+//   // email: '282311878@qq.com',
+//   email: '631824375@qq.com',
+//   user: 'wangy'
+// }
 const url = 'http://www.baidu.com'
 // async..await is not allowed in global scope, must use a wrapper
 async function send(sendInfo) {
