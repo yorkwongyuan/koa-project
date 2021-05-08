@@ -1,10 +1,6 @@
 import svgCaptcha from 'svg-captcha'
 import { setValue } from '../config/RedisConfig'
 class PublicController {
-  // constructor () {
-
-  // }
-
   getCaptcha (ctx) {
     const body = ctx.request.query
     console.log(body, 'body')
