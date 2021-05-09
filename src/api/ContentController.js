@@ -36,7 +36,7 @@ class PostController {
   // 查询友情链接
   async getLinks (ctx) {
     // const links = new Link({
-    //   title: '出大事了',
+    //   title: '出大1事了',
     //   link: 'www',
     //   created: '',
     //   isTop: '0',
