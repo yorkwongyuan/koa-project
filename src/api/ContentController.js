@@ -3,21 +3,6 @@ import Link from '../model/Link'
 class PostController {
   async getPostList (ctx) {
     const body = ctx.query
-    // const post = new Post({
-    //   title: '大美',
-    //   content: 'test content',
-    //   catalog: 'index',
-    //   fav: 20,
-    //   isEnd: '0',
-    //   reads: '0',
-    //   answer: '0',
-    //   status: '0',
-    //   isTop: '0',
-    //   sort: '0',
-    //   tags: []
-    // })
-    // const tmp = await post.save()
-    // console.log('PostController -> getPostList -> tmp', tmp)
     const sort = body.sort ? body.sort : 'created'
     const page = body.page ? parseInt(body.page) : 0
     const limit = body.limit ? parseInt(body.limit) : 20
