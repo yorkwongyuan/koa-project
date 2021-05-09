@@ -1,4 +1,5 @@
 import Post from '../model/Post'
+import Link from '../model/Link'
 class PostController {
   async getPostList (ctx) {
     const body = ctx.query
@@ -44,6 +45,42 @@ class PostController {
       code: 200,
       data: result,
       msg: '获取文章列表成功'
+    }
+  }
+
+  // 查询友情链接
+  async getLinks (ctx) {
+    // const links = new Link({
+    //   title: '出大事了',
+    //   link: 'www',
+    //   created: '',
+    //   isTop: '0',
+    //   sort: '123123',
+    //   type: 'links'
+    // })
+    // await links.save()
+    const result = await Link.find({ type: 'links' })
+    ctx.body = {
+      code: 200,
+      data: result
+    }
+  }
+
+  // 查询温馨提醒
+  async getTips (ctx) {
+    const result = await Link.find({ type: 'tips' })
+    ctx.body = {
+      code: 200,
+      data: result
+    }
+  }
+
+  // 本周热议
+  async getTopWeek (ctx) {
+    const result = await Post.getTopWeek()
+    ctx.body = {
+      code: 200,
+      data: result
     }
   }
 }
