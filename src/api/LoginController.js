@@ -64,13 +64,15 @@ class LoginController {
   }
 
   async register (ctx) {
-    console.log(ctx, 'bod11y')
+    console.log(ctx, '数据呢')
     // 接收数据
     const { body } = ctx.request
+    console.log('register -> body', body)
     const sid = body.sid
     const code = body.code
     const msg = {}
     const isCodeAvailable = await checkCode(sid, code)
+    console.log('register -> isCodeAvailable', isCodeAvailable)
     let isChecked = true
     // 校验验证码
     if (isCodeAvailable) {

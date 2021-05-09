@@ -3,9 +3,9 @@ class PostController {
   async getPostList (ctx) {
     const body = ctx.query
     // const post = new Post({
-    //   title: '大明王朝',
+    //   title: '大美',
     //   content: 'test content',
-    //   catalog: 'share',
+    //   catalog: 'index',
     //   fav: 20,
     //   isEnd: '0',
     //   reads: '0',
@@ -22,13 +22,13 @@ class PostController {
     const limit = body.limit ? parseInt(body.limit) : 20
     const options = {}
     console.log('PostController -> getPostList -> body.catalog', body.catalog)
-    if (typeof body.catalog !== 'undefined') {
+    if (typeof body.catalog !== 'undefined' && body.catalog !== '') {
       options.catalog = body.catalog
     }
-    if (typeof body.isTop !== 'undefined') {
+    if (typeof body.isTop !== 'undefined' && body.isTop !== '') {
       options.isTop = body.isTop
     }
-    if (typeof body.status !== 'undefined') {
+    if (typeof body.status !== 'undefined' && body.status !== '') {
       options.status = body.status
     }
     if (typeof body.isEnd !== 'undefined') {
@@ -39,6 +39,7 @@ class PostController {
     }
     console.log('PostController -> getPostList -> options', options)
     const result = await Post.getList(options, sort, page, limit)
+    console.log('PostController -> getPostList -> result', result)
     ctx.body = {
       code: 200,
       data: result,

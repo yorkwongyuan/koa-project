@@ -1,6 +1,6 @@
 import mongoose from 'mongoose'
 import config from './index'
-
+mongoose.set('useCreateIndex', true)
 const EVENTS = {
   CONNECTED: 'connected',
   ERROR: 'error',
