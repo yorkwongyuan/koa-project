@@ -1,9 +1,9 @@
-const {merge} = require('webpack-merge')
+const { merge } = require('webpack-merge')
 const webpackBaseConfig = require('./webpack.config.base')
 const TerserPlugin = require('terser-webpack-plugin')
 module.exports = merge(webpackBaseConfig, {
   mode: 'production',
-  stats: {children: false, warnings: false},
+  stats: { children: false, warnings: false },
   optimization: {
     minimizer: [
       new TerserPlugin({
@@ -22,7 +22,7 @@ module.exports = merge(webpackBaseConfig, {
           mangle: true
         },
         parallel: true
-    })],
+      })],
     splitChunks: {
       cacheGroups: {
         commons: {
@@ -33,5 +33,5 @@ module.exports = merge(webpackBaseConfig, {
         }
       }
     }
-  },
+  }
 })
