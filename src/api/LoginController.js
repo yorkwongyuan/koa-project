@@ -32,8 +32,14 @@ class LoginController {
     const sid = body.sid
     const code = body.code
     const userInfo = await User.findOne({ username: body.username })
+    console.log('LoginController -> login -> userInfo.json', userInfo.toJSON())
+    console.log('LoginController -> login -> userInfo', userInfo)
+    const json = userInfo.toJSON()
+    const arr = ['username', 'password', 'roles']
+    arr.forEach(item => {
+      delete json[item]
+    })
     const password = userInfo.password
-    console.log(userInfo, 'userInfo')
     const isCodeAvailable = await checkCode(sid, code)
     console.log(isCodeAvailable, 'isCodeAvailable')
     // 验证码是否正确
@@ -41,12 +47,13 @@ class LoginController {
       const bool = bcrypt.compare(body.password, password)
       // 用户名密码正确
       if (bool) {
-        const token = jsonwebtoken.sign({ _id: '1111ork' }, config.JWT_SECRET, {
+        const token = jsonwebtoken.sign({ _id: json._id }, config.JWT_SECRET, {
           expiresIn: '1h'
         })
         ctx.body = {
           code: 200,
-          data: token,
+          token: token,
+          data: json,
           msg: '登录成功'
         }
       } else {
@@ -94,7 +101,7 @@ class LoginController {
         const user = new User({
           username: body.username,
           password: body.password,
-          nickname: body.nickname,
+          name: body.nickname,
           created: monment().format('YY-MM-DD HH:mm:ss')
         })
         const result = await user.save()
