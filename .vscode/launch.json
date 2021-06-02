@@ -5,19 +5,18 @@
   "version": "0.2.0",
   "configurations": [
     {
-      "name": "Launch via NPM",
+      "type": "node",
       "request": "launch",
+      "name": "Launch via NPM",
+      "runtimeExecutable": "npm",
       "restart": true,
       "console": "integratedTerminal",
+      "runtimeVersion": "11.2.0",
       "runtimeArgs": [
         "run-script",
         "dev"
       ],
-      "runtimeExecutable": "npm",
-      "skipFiles": [
-        "<node_internals>/**"
-      ],
-      "type": "pwa-node"
+      "port": 9229
     },
     {
       "type": "node",
