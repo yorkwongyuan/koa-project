@@ -10,11 +10,11 @@ const getJWTPayload = token => {
 const checkCode = async (key, value) => {
   console.log('checkCode -> key', key)
   const redisData = await getValue(key)
-  console.log(redisData.toLowerCase() === value.toLowerCase(), 'bool')
+  console.log(redisData && redisData.toLowerCase() === value.toLowerCase(), 'bool')
   // redis 中有这个数据
-  if (redisData !== null) {
+  if (redisData) {
     // 值相同
-    if (redisData.toLowerCase() === value.toLowerCase()) {
+    if (redisData && redisData.toLowerCase() === value.toLowerCase()) {
       return true
       // 值不同
     } else {

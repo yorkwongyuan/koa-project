@@ -1,9 +1,10 @@
 import send from '../config/mailConfig'
-import monment from 'dayjs'
+import moment from 'dayjs'
 import jsonwebtoken from 'jsonwebtoken'
 import config from '../config/index'
 import { checkCode } from '../common/Util'
 import User from '../model/User'
+import SignRecord from '../model/SignRecord'
 import bcrypt from 'bcrypt'
 class LoginController {
   // constructor () {}
@@ -12,7 +13,7 @@ class LoginController {
     try {
       const result = await send({
         code: '1234',
-        expire: monment().add(30, 'minutes').format('YYYY-MM-DD HH:mm:ss'),
+        expire: moment().add(30, 'minutes').format('YYYY-MM-DD HH:mm:ss'),
         // email: '282311878@qq.com',
         email: body.username,
         user: 'wangy'
@@ -50,6 +51,20 @@ class LoginController {
         const token = jsonwebtoken.sign({ _id: json._id }, config.JWT_SECRET, {
           expiresIn: '1h'
         })
+        const record = await SignRecord.findByUid(json._id)
+        console.log('LoginController -> login -> record', record)
+        // 如果没有签到信息
+        if (record !== null) {
+          // 如果签到的时间是今天
+          if (moment(record.created).format('YYYY-MM-DD') === moment().format('YYYY-MM-DD')) {
+            json.isSign = true
+          } else {
+            json.isSign = false
+          }
+          // 如果有签到信息
+        } else {
+          json.isSign = false
+        }
         ctx.body = {
           code: 200,
           token: token,
@@ -102,7 +117,7 @@ class LoginController {
           username: body.username,
           password: body.password,
           name: body.nickname,
-          created: monment().format('YY-MM-DD HH:mm:ss')
+          created: moment().format('YY-MM-DD HH:mm:ss')
         })
         const result = await user.save()
         ctx.body = {

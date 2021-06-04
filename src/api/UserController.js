@@ -10,29 +10,38 @@ class UserController {
     console.log('UserController -> userSign -> obj', obj)
     // 查询上一次签到记录
     const record = await SignRecord.findByUid(obj._id)
+    console.log('UserController -> userSign -> record', record)
     // 获取用户基本信息
     const user = await User.findByID(obj._id)
     let newRecord = {}
     let result = ''
     // 判断签到逻辑
     // 如果有签到记录
-    if (record !== null) {
+    if (record) {
       // 判断用户上一次签到记录的created时间是否和今天相同, 如果相同则说明已经签到了
       if (moment(record.created).format('YYYY-MM-DD') === moment().format('YYYY-MM-DD')) {
+        const now = moment(record.created).format('YYYY-MM-DD')
+        console.log('UserController -> userSign -> now', now)
         // 用户已经签到了
         ctx.body = {
           code: 500,
-          msg: '',
+          msg: '用户已经签到了',
           favs: user.favs,
           count: user.count
         }
+        return
       } else {
       // 有签到记录而且不是今天签到
       // 用户签到数量
-        const count = user.count
+        let count = user.count
         let fav = 0
+        // const today = moment(record.created).format('YYYY-MM-DD')
+        // console.log('UserController -> userSign -> today', today)
+        // const yesterday = moment().subtract(1, 'days').format('YYYY-MM-DD')
+        // console.log('UserController -> userSign -> yesterday', yesterday)
         // 如果上次签到是在昨天,也就是所谓的连续签到
-        if (moment(record.last_sign).format('YYYY-MM-DD HH:mm:ss') === moment().substract(1, 'days').format('YYYY-MM-DD HH:mm:ss')) {
+        if (moment(record.created).format('YYYY-MM-DD') === moment().subtract(1, 'days').format('YYYY-MM-DD')) {
+          count += 1
           // 连续签到逻辑
           if (count < 5) {
             fav = 5
@@ -71,13 +80,13 @@ class UserController {
             count: 1,
             favs: user.favs + fav
           }
-          newRecord = new SignRecord({
-            uid: obj._id,
-            last_sign: record.created,
-            favs: fav
-          })
-          newRecord.save()
         }
+        newRecord = new SignRecord({
+          uid: obj._id,
+          // last_sign: record.created,
+          favs: fav
+        })
+        newRecord.save()
       }
     } else {
       // 如果没有签到记录
@@ -92,12 +101,12 @@ class UserController {
       })
       newRecord = new SignRecord({
         uid: obj._id,
-        favs: 5,
-        last_sign: moment().format('YY-MM-DD HH:mm:ss')
+        favs: 5
+        // last_sign: moment().format('YYYY-MM-DD HH:mm:ss')
       })
       await newRecord.save()
       result = {
-        favs: 5,
+        favs: user.favs + 5,
         count: 1
       }
     }

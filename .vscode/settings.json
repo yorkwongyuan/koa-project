@@ -29,7 +29,7 @@
       "vue-html": "html"
   },
   "git.confirmSync": false,
-  "window.zoomLevel": -1,
+  "window.zoomLevel": -2,
   "editor.renderWhitespace": "boundary",
   "editor.cursorBlinking": "smooth",
   "editor.minimap.enabled": true,
