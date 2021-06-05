@@ -2,10 +2,10 @@ const webpack = require('webpack')
 const path = require('path')
 const nodeExternals = require('webpack-node-externals')
 const { CleanWebpackPlugin } = require('clean-webpack-plugin')
-const {SRC_PATH, DIST_PATH, getWebpackResolveConfig} = require('./utils')
+const { SRC_PATH, DIST_PATH, getWebpackResolveConfig } = require('./utils')
 
 const webpackConfig = {
-  target: "node",
+  target: 'node',
   entry: {
     server: SRC_PATH
   },
@@ -27,12 +27,12 @@ const webpackConfig = {
   },
   externals: [nodeExternals()],
   plugins: [
-    new CleanWebpackPlugin(), 
+    new CleanWebpackPlugin(),
     new webpack.DefinePlugin({
       'process.env': {
         NODE_ENV: (process.env.NODE_ENV === 'production' || process.env.NODE_ENV === 'prod') ? "'production'" : "'development'"
       }
-  })]
+    })]
 }
 
 module.exports = webpackConfig
