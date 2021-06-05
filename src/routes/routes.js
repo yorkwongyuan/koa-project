@@ -8,5 +8,5 @@ const files = modules.keys().reduce((item, path) => {
   return item
 }, [])
 const router = combineRouter(files)
-
+console.log('1')
 export default router
