@@ -27,21 +27,19 @@ class UserController {
           code: 500,
           msg: '用户已经签到了',
           favs: user.favs,
-          count: user.count
+          count: user.count,
+          lastSign: record.created
         }
         return
+        // 非今天签到
       } else {
       // 有签到记录而且不是今天签到
       // 用户签到数量
         let count = user.count
         let fav = 0
-        // const today = moment(record.created).format('YYYY-MM-DD')
-        // console.log('UserController -> userSign -> today', today)
-        // const yesterday = moment().subtract(1, 'days').format('YYYY-MM-DD')
-        // console.log('UserController -> userSign -> yesterday', yesterday)
         // 如果上次签到是在昨天,也就是所谓的连续签到
         if (moment(record.created).format('YYYY-MM-DD') === moment().subtract(1, 'days').format('YYYY-MM-DD')) {
-          count += 1
+          count += 1 // 连续签到的话count加1
           // 连续签到逻辑
           if (count < 5) {
             fav = 5
@@ -62,7 +60,7 @@ class UserController {
             { $inc: { favs: fav, count: 1 } }
           )
           result = {
-            count: user.count + 1,
+            count,
             favs: user.favs + fav
           }
         } else {
@@ -81,6 +79,7 @@ class UserController {
             favs: user.favs + fav
           }
         }
+        // 非今天签到的就新保存一条
         newRecord = new SignRecord({
           uid: obj._id,
           // last_sign: record.created,
@@ -113,7 +112,8 @@ class UserController {
     ctx.body = {
       code: 200,
       msg: '请求成功',
-      ...result
+      ...result,
+      lastSign: newRecord.created
     }
   }
 }

@@ -61,6 +61,8 @@ class LoginController {
           } else {
             json.isSign = false
           }
+          // 上一次签到的时间
+          json.lastSign = record.created
           // 如果有签到信息
         } else {
           json.isSign = false

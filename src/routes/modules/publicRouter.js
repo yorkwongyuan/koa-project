@@ -1,6 +1,6 @@
 import Router from 'koa-router'
-import publicController from '../api/svgCaptchaController'
-import contentController from '../api/ContentController1'
+import publicController from '../../api/svgCaptchaController'
+import contentController from '../../api/ContentController1'
 
 const router = new Router()
 
