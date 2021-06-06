@@ -1,5 +1,5 @@
 import nodemailer from 'nodemailer'
-
+import config from './index'
 // const sendInfo = {
 //   code: '1234',
 //   expire: '2019-1-1',
@@ -7,9 +7,12 @@ import nodemailer from 'nodemailer'
 //   email: '631824375@qq.com',
 //   user: 'wangy'
 // }
-const url = 'http://www.baidu.com'
+
 // async..await is not allowed in global scope, must use a wrapper
 async function send (sendInfo) {
+  const route = sendInfo.type === 'email' ? '/email' : '/reset'
+  const baseUrl = config.baseUrl
+  const url = `${baseUrl}/#${route}?key=${sendInfo.key}`
   // 邮件打开时候看到的样式
   const html = `<div style="border: 1px solid #dcdcdc;color: #676767;width: 600px; margin: 0 auto; padding-bottom: 50px;position: relative;">
   <div style="height: 60px; background: #393d49; line-height: 60px; color: #58a36f; font-size: 18px;padding-left: 10px;">测试社区</div>
@@ -34,12 +37,12 @@ async function send (sendInfo) {
       pass: 'eleimkbqejeabffg' // generated ethereal password
     }
   })
-
+  const subject = sendInfo.user !== '' && sendInfo.type !== 'email' ? '实践课程的注册码' : `你好,${sendInfo.user},这是邮箱修改邮件` // Subject line
   // send mail with defined transport object
   const info = await transporter.sendMail({
     from: '"账号测试" <codersmail@qq.com>', // sender address
     to: sendInfo.email, // list of receivers
-    subject: sendInfo.user === '' ? '实践课程的注册码' : `你好,${sendInfo.user},这是实践课程的注册码`, // Subject line
+    subject,
     text: `您在实践课程中的注册码是${sendInfo.code}`, // plain text body
     html: html // html body
   })

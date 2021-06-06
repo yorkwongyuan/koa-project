@@ -1,7 +1,12 @@
 import SignRecord from '../model/SignRecord'
 import { getJWTPayload } from '../common/Util'
+import send from '../config/mailConfig'
 import User from '../model/User'
 import moment from 'dayjs'
+import { v4 as uuid } from 'uuid'
+import config from '../config/index'
+import { setValue } from '../config/RedisConfig'
+import jwt from 'jsonwebtoken'
 class UserController {
   async userSign (ctx) {
     // 获取JWT的payload
@@ -114,6 +119,62 @@ class UserController {
       msg: '请求成功',
       ...result,
       lastSign: newRecord.created
+    }
+  }
+
+  // 更新用户信息
+  async updateUserInfo (ctx) {
+    const { body } = ctx.request
+    const obj = await getJWTPayload(ctx.header.authorization)
+    console.log('updateUserInfo -> obj', obj)
+    const user = User.findOne({ _id: obj._id })
+    // 修改了用户信息
+    if (body.username && body.username !== user.username) {
+      const key = uuid()
+      const token = jwt.sign({ _id: obj._id }, config.JWT_SECRET, {
+        expiresIn: '30m'
+      })
+      setValue(key, token)
+      try {
+        // 用户修改了用户名
+        const result = await send({
+          type: 'email',
+          key,
+          code: '',
+          expire: moment().add(30, 'minutes').format('YYYY-MM-DD HH:mm:ss'),
+          email: '631824375@qq.com', // user.username
+          user: body.name
+        })
+        console.log('updateUserInfo -> result', result)
+        ctx.body = {
+          code: 200,
+          data: result,
+          msg: '邮件发送成功'
+        }
+      } catch (e) {
+        // e
+        console.log(e)
+      }
+    } else {
+      // 这几项,本接口不得修改
+      const arr = ['username', 'password', 'mobile']
+      arr.forEach(item => {
+        delete body[item]
+      })
+      // 用户没有修改用户名
+      const result = await User.update({ _id: obj._id }, body)
+      if (result.n === 1 && result.ok === 1) {
+        ctx.body = {
+          code: 200,
+          msg: '更新成功'
+        }
+      } else {
+        ctx.body = {
+          code: 500,
+          msg: '用户信息更新失败'
+        }
+      }
+      console.log('updateUserInfo -> result', result)
     }
   }
 }

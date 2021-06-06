@@ -6,8 +6,10 @@ const REDIS = {
 }
 
 const JWT_SECRET = '12312123123'
+const baseUrl = process.env.NODE_ENV === 'production' ? 'http://106.55.51.93:10066' : 'http://localhost:8080'
 export default {
   DB_URL,
   REDIS,
-  JWT_SECRET
+  JWT_SECRET,
+  baseUrl
 }
