@@ -5,7 +5,7 @@ import User from '../model/User'
 import moment from 'dayjs'
 import { v4 as uuid } from 'uuid'
 import config from '../config/index'
-import { setValue } from '../config/RedisConfig'
+import { setValue, getValue } from '../config/RedisConfig'
 import jwt from 'jsonwebtoken'
 class UserController {
   async userSign (ctx) {
@@ -122,14 +122,23 @@ class UserController {
     }
   }
 
-  // 更新用户信息
+  // 更新用户信息(不含用户名)
   async updateUserInfo (ctx) {
     const { body } = ctx.request
     const obj = await getJWTPayload(ctx.header.authorization)
     console.log('updateUserInfo -> obj', obj)
-    const user = User.findOne({ _id: obj._id })
+    const user = await User.findOne({ _id: obj._id })
+    let msg = ''
     // 修改了用户信息
     if (body.username && body.username !== user.username) {
+      const tempUser = await User.findOne({ username: body.username })
+      if (tempUser && tempUser.password) {
+        ctx.body = {
+          code: 501,
+          msg: '该用户已经存在'
+        }
+        return
+      }
       const key = uuid()
       const token = jwt.sign({ _id: obj._id }, config.JWT_SECRET, {
         expiresIn: '30m'
@@ -137,44 +146,74 @@ class UserController {
       setValue(key, token)
       try {
         // 用户修改了用户名
-        const result = await send({
+        await send({
           type: 'email',
-          key,
+          data: {
+            key,
+            username: body.username // 传递用户需要修改的字段
+          },
           code: '',
           expire: moment().add(30, 'minutes').format('YYYY-MM-DD HH:mm:ss'),
-          email: '631824375@qq.com', // user.username
-          user: body.name
+          email: user.username, // user.username
+          user: user.name
         })
-        console.log('updateUserInfo -> result', result)
-        ctx.body = {
-          code: 200,
-          data: result,
-          msg: '邮件发送成功'
-        }
+        msg = '发送验证邮件成功,请点击链接确定修改'
       } catch (e) {
-        // e
         console.log(e)
       }
+    }
+    // else {
+    // 这几项,本接口不得修改
+    const arr = ['username', 'password', 'mobile']
+    arr.forEach(item => {
+      delete body[item]
+    })
+    // 用户没有修改用户名
+    const result = await User.updateOne({ _id: obj._id }, body)
+    if (result.n === 1 && result.ok === 1) {
+      const userInfo = await User.findOne({ _id: obj._id })
+      ctx.body = {
+        code: 200,
+        msg: msg !== '' ? msg : '更新成功',
+        data: userInfo
+      }
     } else {
-      // 这几项,本接口不得修改
-      const arr = ['username', 'password', 'mobile']
-      arr.forEach(item => {
-        delete body[item]
-      })
-      // 用户没有修改用户名
-      const result = await User.update({ _id: obj._id }, body)
-      if (result.n === 1 && result.ok === 1) {
-        ctx.body = {
-          code: 200,
-          msg: '更新成功'
-        }
-      } else {
+      ctx.body = {
+        code: 500,
+        msg: '用户信息更新失败'
+      }
+    }
+    console.log('updateUserInfo -> result', result)
+  }
+
+  // 更新用户信息
+  async updateUserName (ctx) {
+    const body = ctx.query
+    console.log('updateUserName -> body', body)
+    if (body.key) {
+      let token = ''
+      try {
+        token = await getValue(body.key)
+      } catch (e) {
+        console.log(e)
+      }
+      if (!token) {
         ctx.body = {
           code: 500,
-          msg: '用户信息更新失败'
+          msg: '修改失败'
         }
+        return
       }
-      console.log('updateUserInfo -> result', result)
+      console.log('updateUserName -> token', token)
+      const obj = getJWTPayload('Bearer ' + token)
+      console.log('updateUserName -> obj', obj)
+      await User.updateOne({ _id: obj._id }, {
+        username: body.username
+      })
+      ctx.body = {
+        code: 200,
+        msg: '更新用户名成功'
+      }
     }
   }
 }

@@ -1,18 +1,12 @@
 import nodemailer from 'nodemailer'
 import config from './index'
-// const sendInfo = {
-//   code: '1234',
-//   expire: '2019-1-1',
-//   // email: '282311878@qq.com',
-//   email: '631824375@qq.com',
-//   user: 'wangy'
-// }
-
+import qs from 'qs'
 // async..await is not allowed in global scope, must use a wrapper
 async function send (sendInfo) {
-  const route = sendInfo.type === 'email' ? '/email' : '/reset'
+  const route = sendInfo.type === 'email' ? '/confirm' : '/reset'
   const baseUrl = config.baseUrl
-  const url = `${baseUrl}/#${route}?key=${sendInfo.key}`
+  // const url = `${baseUrl}/#${route}?key=${sendInfo.key}`
+  const url = `${baseUrl}/#${route}?${qs.stringify(sendInfo.data)}`
   // 邮件打开时候看到的样式
   const html = `<div style="border: 1px solid #dcdcdc;color: #676767;width: 600px; margin: 0 auto; padding-bottom: 50px;position: relative;">
   <div style="height: 60px; background: #393d49; line-height: 60px; color: #58a36f; font-size: 18px;padding-left: 10px;">测试社区</div>
