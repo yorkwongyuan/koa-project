@@ -1,4 +1,4 @@
-import mongoose from '../config/DBHelper'
+import mongoose from '@/config/DBHelper'
 import moment from 'dayjs'
 const Schema = mongoose.Schema
 // const prodUrl = '106.55.51.93:12005'

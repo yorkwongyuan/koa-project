@@ -33,8 +33,6 @@ class LoginController {
     const sid = body.sid
     const code = body.code
     const userInfo = await User.findOne({ username: body.username })
-    console.log('LoginController -> login -> userInfo.json', userInfo.toJSON())
-    console.log('LoginController -> login -> userInfo', userInfo)
     const json = userInfo.toJSON()
     const arr = ['username', 'password', 'roles']
     arr.forEach(item => {
@@ -45,14 +43,15 @@ class LoginController {
     console.log(isCodeAvailable, 'isCodeAvailable')
     // 验证码是否正确
     if (isCodeAvailable) {
-      const bool = bcrypt.compare(body.password, password)
+      const bool = await bcrypt.compare(body.password, password)
+      console.log('LoginController -> login -> password', password)
+      console.log('LoginController -> login -> body.password', body.password)
       // 用户名密码正确
       if (bool) {
         const token = jsonwebtoken.sign({ _id: json._id }, config.JWT_SECRET, {
           expiresIn: '1h'
         })
         const record = await SignRecord.findByUid(json._id)
-        console.log('LoginController -> login -> record', record)
         // 如果没有签到信息
         if (record !== null) {
           // 如果签到的时间是今天

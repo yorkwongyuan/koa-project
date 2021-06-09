@@ -15,7 +15,16 @@ const app = new Koa()
 
 const jwt = JWT({ secret: config.JWT_SECRET }).unless({ path: [/^\/public/, /\/login/, /\/register/] })
 const middleWare = compose([
-  body(),
+  body({
+    multipart: true,
+    formidable: {
+      keepExtensions: true,
+      maxFieldsSize: 5 * 1024 * 1024
+    },
+    onError: err => {
+      console.log('err', err)
+    }
+  }),
   json({ pretty: true, param: 'pretty' }),
   cors(),
   statics(path.join(__dirname, '../public')),
