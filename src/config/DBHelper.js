@@ -1,16 +1,20 @@
 import mongoose from 'mongoose'
 import config from './index'
 mongoose.set('useCreateIndex', true)
+// mongoose.set('bufferCommands', true)
 const EVENTS = {
   CONNECTED: 'connected',
   ERROR: 'error',
   DISCONNECTED: 'disconnected'
 }
-mongoose.connect(config.DB_URL, { useNewUrlParser: true, useUnifiedTopology: true })
+setTimeout(() => {
+  // 创建连接
+  mongoose.connect(config.DB_URL, { useNewUrlParser: true, useUnifiedTopology: true, bufferCommands: false })
+}, 1000)
 
 // 连接成功
 mongoose.connection.on(EVENTS.CONNECTED, () => {
-  console.log('mongodb connected')
+  console.log('mongoose connected' + config.DB_URL)
 })
 
 // 连接异常

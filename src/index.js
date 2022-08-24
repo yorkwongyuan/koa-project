@@ -39,6 +39,7 @@ if (!isDevMode) {
 }
 app.use(middleWare)
 app.use(routers())
+// 注意, 容器中运行的端口是12005, 所以这里使用12005作为生产环境端口
 const port = isDevMode ? 3000 : 12005
 app.listen(port, () => {
   console.log(`The server is runing at:${port}`)

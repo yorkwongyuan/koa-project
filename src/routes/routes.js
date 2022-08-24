@@ -12,5 +12,4 @@ import contentRouter from './files/contentRouter'
 //   return item
 // }, [])
 const router = combineRouter(loginRouter, publicRouter, userRouter, contentRouter)
-console.log('1')
 export default router

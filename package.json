@@ -6,6 +6,7 @@
   "scripts": {
     "start": "npx nodemon ./src/index",
     "start:es": "npx nodemon --exec babel-node ./src/index",
+    "start:demo": "npx nodemon --exec babel-node ./src/model/demo2.js",
     "webpack:debug": "npx node --inspect-brk ./node_modules/.bin/webpack --progress",
     "build": "cross-env NODE_ENV=production webpack --config build/webpack.config.prod.js",
     "clean": "rimraf dist",
@@ -23,6 +24,7 @@
     "@koa/cors": "^3.1.0",
     "axios": "^0.21.1",
     "babel-loader": "^8.2.2",
+    "babel-node": "0.0.1-security",
     "bcrypt": "^3.0.8",
     "bluebird": "^3.7.2",
     "clean-webpack-plugin": "^3.0.0",
