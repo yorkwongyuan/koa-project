@@ -5,6 +5,7 @@ LABEL maintainer=631824375@qq.com
 # 创建一个工作目录了
 WORKDIR /app
 COPY . .
+# 准备镜像
 RUN yarn install --registry=https://registry.npm.taobao.org
 RUN npm run build
 
