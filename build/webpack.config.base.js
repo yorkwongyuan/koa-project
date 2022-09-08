@@ -10,7 +10,7 @@ const webpackConfig = {
     server: SRC_PATH
   },
   output: {
-    filename: '[name].js',
+    filename: '[name].bundle.js',
     path: DIST_PATH
   },
   resolve: {
