@@ -7,7 +7,7 @@ const REDIS = {
 }
 
 const JWT_SECRET = '12312123123'
-const baseUrl = process.env.NODE_ENV === 'production' ? 'http://119.91.228.12:10066' : 'http://localhost:8080'
+const baseUrl = process.env.NODE_ENV === 'production' ? 'http://119.91.228.12:12005' : 'http://localhost:8080'
 const uploadPath = process.env.NODE_ENV === 'production' ? '/app/public' : path.join(path.resolve(__dirname), '../../public')
 
 export default {
